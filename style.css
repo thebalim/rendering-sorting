@@ -1,0 +1,47 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+#header {
+    margin: 5px;
+    text-align: center;
+}
+
+.container {
+    margin: 5px;
+    border: 1px solid red;
+}
+
+.btnContainer {
+    background-color: aqua;
+    display: flex;
+    justify-content: center;
+}
+
+.dropDownName, .dropDownCountry {
+    margin: 0px 10px;
+    width: 120px;
+}
+
+.dropDownBtnName, .dropDownBtnCountry {
+    display: flex;
+    flex-direction: column;
+}
+
+.show {
+    display: none;
+}
+
+.divCat {
+    text-align: center;
+    border: 1px solid green;
+    padding: 5px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.paraCat {
+    padding: 5px;
+    font-family: 'Courier New', Courier, monospace;
+}

@@ -13,6 +13,10 @@ function getCats(){
         console.log(json.data);
 
         renderPage(json.data);
+
+
+
+        delBtn.addEventListener('click', deletePage);
     })
 }
 
@@ -22,6 +26,8 @@ getCats();
 // render function
 
 function renderPage(data){
+    deletePage();
+
     data.forEach(cat => {
         const div = document.createElement('div');
         div.className = 'divCat';
@@ -33,3 +39,17 @@ function renderPage(data){
         page.content.append(div);
     })
 }
+
+
+// delete function
+function deletePage(){
+    const parent = document.querySelector('.cat-content');
+    while( parent.childNodes.length != 0){
+        parent.removeChild(parent.childNodes[0]);
+    }
+}
+
+
+//del button
+const delBtn = document.getElementById('del');
+

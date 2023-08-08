@@ -18,20 +18,30 @@
     background-color: aqua;
     display: flex;
     justify-content: center;
+    align-items: center;
+    min-height: 50px;
 }
 
-.dropDownName, .dropDownCountry, #del {
+.dropDownName, .dropDownCountry, #catFactsBtn {
     margin: 0px 10px;
     width: 120px;
+    position: relative;
 }
 
 .dropDownBtnName, .dropDownBtnCountry {
     display: flex;
     flex-direction: column;
+    display: none;
+    position: absolute;
 }
 
 .show {
-    display: none;
+    display: block;
+}
+
+.second-header {
+    height: 50px;
+    background-color: aqua;
 }
 
 .divCat {

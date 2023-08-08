@@ -54,7 +54,7 @@ function getCats(){
             renderPage(sortedUkCats);
         })
 
-        //sort Usa cats
+        //sort Us cats
         countrySortUsaBtn.addEventListener('click', () => {
             let sortUsaCats = myData.filter(cat => cat.country == "United States");
             renderPage(sortUsaCats);

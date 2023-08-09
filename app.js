@@ -55,6 +55,54 @@ function init() {
 
 // setup event listeners for all buttons
 function setupEventListeners() {
+
+
+  // get cat facts btn
+  factsBtn.addEventListener('click', () => {
+    const baseUrl = url + "facts" + "?page=" + val.page;
+    fetch(baseUrl)
+    .then((res) => res.json())
+    .then((json) => {
+      // store data from api response in cat facts array
+      catFacts = json.data;
+
+      // log as objects
+      console.log({
+        catFacts,
+        json,
+        jsonData: json.data
+      })
+
+
+      // render function for cat facts page
+      function renderCatFacts(data){
+        // remove all child nodes from page.content
+        deletePage();
+
+        let index = 1;
+
+        data.forEach((data) => {
+          const div = document.createElement('div');
+
+          // add class to nodes
+          div.className = "catFacts";
+
+          // add texts to nodes
+          div.textContent = `${index}. ${data.fact}`;
+
+          // append div to page.content
+          page.content.append(div);
+          
+          index += 1;
+        })
+      }
+
+      renderCatFacts(catFacts);
+
+    }); // --> fetch
+  }); // --> catFacts button
+
+
   // name sort btn toggle
   nameSortBtn.addEventListener("click", () => {
     document.querySelector(".dropDownBtnName").classList.toggle("show");
@@ -77,19 +125,13 @@ function setupEventListeners() {
     renderPage(sortedNameDescend);
   });
 
-  /**
-   * sort uk cats
-   * yo tah filter button hola nih?
-   */
+  // filter btn for uk cats
   filterUkBtn.addEventListener("click", () => {
     const sortedUkCats = cats.filter((cat) => cat.country == "United Kingdom");
     renderPage(sortedUkCats);
   });
 
-  /**
-   * sort Us cats
-   * yo nih filter button hola?
-   */
+  // filter btn for usa cats
   filterUsaBtn.addEventListener("click", () => {
     const sortUsaCats = cats.filter((cat) => cat.country == "United States");
     renderPage(sortUsaCats);

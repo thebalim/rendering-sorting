@@ -51,7 +51,22 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.divCat:nth-child(even) {
+    background-color: cornsilk;
+}
+
 .paraCat {
     padding: 5px;
     font-family: 'Courier New', Courier, monospace;
+}
+
+
+.catFacts {
+    padding: 10px;
+    border-bottom: 1px solid brown;
+    text-align: center;
+}
+
+.catFacts:nth-child(even) {
+    background-color: cornsilk;
 }

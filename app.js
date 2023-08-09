@@ -9,6 +9,9 @@ const page = {
 // variable to store cats data
 let cats = [];
 
+// variable to store cats facts data
+let catFacts = [];
+
 //facts button
 const factsBtn = document.getElementById("catFactsBtn");
 
@@ -21,8 +24,8 @@ const nameSortAscendBtn = document.getElementById("btnSortNameAscend");
 const nameSortDescendBtn = document.getElementById("btnSortNameDescend");
 
 // button for sorting country
-const countrySortUkBtn = document.getElementById("btnSortUk");
-const countrySortUsaBtn = document.getElementById("btnSortUsa");
+const filterUkBtn = document.getElementById("btnSortUk");
+const filterUsaBtn = document.getElementById("btnSortUsa");
 
 function getCats() {
   const baseUrl = url + "breeds" + "?page=" + val.page;
@@ -78,7 +81,7 @@ function setupEventListeners() {
    * sort uk cats
    * yo tah filter button hola nih?
    */
-  countrySortUkBtn.addEventListener("click", () => {
+  filterUkBtn.addEventListener("click", () => {
     const sortedUkCats = cats.filter((cat) => cat.country == "United Kingdom");
     renderPage(sortedUkCats);
   });
@@ -87,12 +90,12 @@ function setupEventListeners() {
    * sort Us cats
    * yo nih filter button hola?
    */
-  countrySortUsaBtn.addEventListener("click", () => {
+  filterUsaBtn.addEventListener("click", () => {
     const sortUsaCats = cats.filter((cat) => cat.country == "United States");
     renderPage(sortUsaCats);
   });
 
-  // handling sorting buttons
+  // handling dropdown btn contents
   document.documentElement.addEventListener("click", (e) => {
     if (!e.target.matches("#nameSort")) {
       let btnContent = document.querySelector(".dropDownBtnName");

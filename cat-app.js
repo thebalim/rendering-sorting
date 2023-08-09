@@ -1,5 +1,8 @@
 const url = "https://catfact.ninja/";
-const val = { page: 1 };
+const val = { 
+              page: 1, // cat page
+              factPage: 1 // fact page
+            };
 
 // handling fact page or cat page
 let eval = 1;
@@ -37,6 +40,7 @@ const nameSortDescendBtn = document.getElementById("btnSortNameDescend");
 const filterUkBtn = document.getElementById("btnSortUk");
 const filterUsaBtn = document.getElementById("btnSortUsa");
 
+// get cats function
 function getCats() {
   const baseUrl = url + "breeds" + "?page=" + val.page;
 
@@ -67,8 +71,10 @@ function getCats() {
     });
 }
 
+// get cat facts function
 function getFactPage(){
-  const baseUrl = url + "facts" + "?page=" + val.page;
+  eval = 0;
+  const baseUrl = url + "facts" + "?page=" + val.factPage;
   fetch(baseUrl)
   .then((res) => res.json())
   .then((json) => {
@@ -78,7 +84,7 @@ function getFactPage(){
     // checking if next page exits
     if(json.next_page_url != null){
       page.factloader = true;
-      page.message.textContent = "-Page" + val.page + "--Scroll to load more content---";
+      page.message.textContent = "-Page" + val.factPage + "--Scroll to load more content---";
 
     } else {
       page.message.style.display = "none";
@@ -94,7 +100,7 @@ function getFactPage(){
 
     // render function for cat facts page
     function renderCatFacts(data){
-      eval = 0;
+      
       // remove all child nodes from page.content
       deletePage();
 
@@ -125,7 +131,13 @@ function getFactPage(){
 
 function init() {
   setupEventListeners();
-  getCats();
+  if( eval == 1){
+    getCats();
+  } 
+  else if ( eval == 0){
+    getFactPage();
+  }
+  
 }
 
 // setup event listeners for all buttons
@@ -134,8 +146,6 @@ function setupEventListeners() {
 
   // get cat facts btn
   factsBtn.addEventListener('click', getFactPage); // --> catFacts button
-
-  
 
   // name sort btn toggle
   nameSortBtn.addEventListener("click", () => {
@@ -174,6 +184,38 @@ function setupEventListeners() {
     const sortUsaCats = cats.filter((cat) => cat.country == "United States");
     renderPage(sortUsaCats);
   });
+
+// window onscroll event for cat page
+
+  window.onscroll = function(ev){
+  
+    /* log window events
+    console.log(ev);
+    console.log(window.innerHeight);
+    console.log(window.scrollY);
+    console.log(page.content.offsetHeight);
+    console.log(document.body.offsetHeight);
+    */
+
+    if((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 200)) {
+      // console.log('scrolling');
+
+      if(eval == 1){
+        // for cat page
+        if(page.catloader){
+          page.catloader = false;
+          addNewCatPage();
+        }
+      } else {
+        // for fact page
+        if(page.factloader){
+          page.factloader = false;
+          addNewFactPage();
+        }
+      }
+      
+    }
+  }
 
   // handling dropdown btn contents
   document.documentElement.addEventListener("click", (e) => {
@@ -220,38 +262,7 @@ function renderPage(data) {
 }
 
 
-  // window onscroll event for cat page
-  window.onscroll = function(ev){
   
-    /* log window events
-    console.log(ev);
-    console.log(window.innerHeight);
-    console.log(window.scrollY);
-    console.log(page.content.offsetHeight);
-    console.log(document.body.offsetHeight);
-    */
-
-    if((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 300)) {
-      // console.log('scrolling');
-
-      if(eval == 1){
-        // for cat page
-        if(page.catloader){
-          page.catloader = false;
-          addNewCatPage();
-        }
-      } if(eval == 0){
-        // for fact page
-        if(page.factloader){
-          page.factloader = false;
-          addNewFactPage();
-        }
-      }
-      
-    }
-  }
-
-
 
 // add new cat page function
 function addNewCatPage(){
@@ -261,7 +272,7 @@ function addNewCatPage(){
 
 // add new fact page function
 function addNewFactPage(){
-  val.page++;
+  val.factPage++;
   getFactPage();
 }
 

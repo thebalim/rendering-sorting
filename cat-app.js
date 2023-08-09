@@ -1,10 +1,20 @@
 const url = "https://catfact.ninja/";
 const val = { page: 1 };
 
+// handling fact page or cat page
+let eval = 1;
+
 const page = {
   // cat-content
   content: document.querySelector(".cat-content"),
+  // loader booleon
+  catloader: true,
+  factloader: true,
+  message: document.createElement('div'),
 };
+
+page.message.textContent = "---Scroll to load more content--";
+page.content.append(page.message);
 
 // variable to store cats data
 let cats = [];
@@ -33,6 +43,15 @@ function getCats() {
   fetch(baseUrl)
     .then((res) => res.json())
     .then((json) => {
+      // checking if next page exits
+      if(json.next_page_url != null){
+        page.catloader = true;
+        page.message.textContent = "-Page" + val.page + "--Scroll to load more content---";
+
+      } else {
+        page.message.style.display = "none";
+      }
+
       // store data from api response to cats array
       cats = json.data;
 
@@ -48,6 +67,62 @@ function getCats() {
     });
 }
 
+function getFactPage(){
+  const baseUrl = url + "facts" + "?page=" + val.page;
+  fetch(baseUrl)
+  .then((res) => res.json())
+  .then((json) => {
+    // store data from api response in cat facts array
+    catFacts = json.data;
+
+    // checking if next page exits
+    if(json.next_page_url != null){
+      page.factloader = true;
+      page.message.textContent = "-Page" + val.page + "--Scroll to load more content---";
+
+    } else {
+      page.message.style.display = "none";
+    }
+
+    // log as objects
+    console.log({
+      catFacts,
+      json,
+      jsonData: json.data
+    })
+
+
+    // render function for cat facts page
+    function renderCatFacts(data){
+      eval = 0;
+      // remove all child nodes from page.content
+      deletePage();
+
+      let index = 1;
+
+      data.forEach((data) => {
+        const div = document.createElement('div');
+
+        // add class to nodes
+        div.className = "catFacts";
+
+        // add texts to nodes
+        div.textContent = `${index}. ${data.fact}`;
+
+        // append div to page.content
+        page.content.append(div);
+        
+        index += 1;
+      })
+    }
+
+    renderCatFacts(catFacts);
+
+
+
+  }); // --> fetch
+}
+
 function init() {
   setupEventListeners();
   getCats();
@@ -58,63 +133,9 @@ function setupEventListeners() {
 
 
   // get cat facts btn
-  factsBtn.addEventListener('click', () => {
-    const baseUrl = url + "facts" + "?page=" + val.page;
-    fetch(baseUrl)
-    .then((res) => res.json())
-    .then((json) => {
-      // store data from api response in cat facts array
-      catFacts = json.data;
+  factsBtn.addEventListener('click', getFactPage); // --> catFacts button
 
-      // log as objects
-      console.log({
-        catFacts,
-        json,
-        jsonData: json.data
-      })
-
-
-      // render function for cat facts page
-      function renderCatFacts(data){
-        // remove all child nodes from page.content
-        deletePage();
-
-        let index = 1;
-
-        data.forEach((data) => {
-          const div = document.createElement('div');
-
-          // add class to nodes
-          div.className = "catFacts";
-
-          // add texts to nodes
-          div.textContent = `${index}. ${data.fact}`;
-
-          // append div to page.content
-          page.content.append(div);
-          
-          index += 1;
-        })
-      }
-
-      renderCatFacts(catFacts);
-
-    }); // --> fetch
-  }); // --> catFacts button
-
-
-  // window onscroll event
-  window.onscroll = function(ev){
-    console.log(ev);
-    console.log(window.innerHeight);
-    console.log(window.scrollY);
-    console.log(page.content.offsetHeight);
-    console.log(document.body.offsetHeight);
-    if((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 300)) {
-      console.log('scrolling');
-    }
-  }
-
+  
 
   // name sort btn toggle
   nameSortBtn.addEventListener("click", () => {
@@ -128,24 +149,28 @@ function setupEventListeners() {
 
   //sort name ascending order
   nameSortAscendBtn.addEventListener("click", () => {
+    eval = 1;
     const sortedNameAscend = cats.sort((a, b) => (a.breed > b.breed ? 1 : -1));
     renderPage(sortedNameAscend);
   });
 
   //sort name descending order
   nameSortDescendBtn.addEventListener("click", () => {
+    eval = 1;
     const sortedNameDescend = cats.sort((a, b) => (b.breed > a.breed ? 1 : -1));
     renderPage(sortedNameDescend);
   });
 
   // filter btn for uk cats
   filterUkBtn.addEventListener("click", () => {
+    eval = 1;
     const sortedUkCats = cats.filter((cat) => cat.country == "United Kingdom");
     renderPage(sortedUkCats);
   });
 
   // filter btn for usa cats
   filterUsaBtn.addEventListener("click", () => {
+    eval = 1;
     const sortUsaCats = cats.filter((cat) => cat.country == "United States");
     renderPage(sortUsaCats);
   });
@@ -193,6 +218,54 @@ function renderPage(data) {
     page.content.append(div);
   });
 }
+
+
+  // window onscroll event for cat page
+  window.onscroll = function(ev){
+  
+    /* log window events
+    console.log(ev);
+    console.log(window.innerHeight);
+    console.log(window.scrollY);
+    console.log(page.content.offsetHeight);
+    console.log(document.body.offsetHeight);
+    */
+
+    if((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 300)) {
+      // console.log('scrolling');
+
+      if(eval == 1){
+        // for cat page
+        if(page.catloader){
+          page.catloader = false;
+          addNewCatPage();
+        }
+      } if(eval == 0){
+        // for fact page
+        if(page.factloader){
+          page.factloader = false;
+          addNewFactPage();
+        }
+      }
+      
+    }
+  }
+
+
+
+// add new cat page function
+function addNewCatPage(){
+    val.page++;
+    getCats();
+  }
+
+// add new fact page function
+function addNewFactPage(){
+  val.page++;
+  getFactPage();
+}
+
+
 
 /**
  * delete function

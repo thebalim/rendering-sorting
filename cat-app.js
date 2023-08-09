@@ -103,6 +103,19 @@ function setupEventListeners() {
   }); // --> catFacts button
 
 
+  // window onscroll event
+  window.onscroll = function(ev){
+    console.log(ev);
+    console.log(window.innerHeight);
+    console.log(window.scrollY);
+    console.log(page.content.offsetHeight);
+    console.log(document.body.offsetHeight);
+    if((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 300)) {
+      console.log('scrolling');
+    }
+  }
+
+
   // name sort btn toggle
   nameSortBtn.addEventListener("click", () => {
     document.querySelector(".dropDownBtnName").classList.toggle("show");
@@ -153,7 +166,8 @@ function setupEventListeners() {
       }
     }
   });
-}
+
+} // --> setupEventListeners
 
 // render function
 function renderPage(data) {
